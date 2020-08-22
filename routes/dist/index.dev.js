@@ -13,6 +13,7 @@ router.get('/', function (req, res) {
     title: 'Registration Form'
   });
 });
+var Registration = mongoose.model('Registration');
 router.post('/', [check('name').isLength({
   min: 1
 }).withMessage('Please enter a name'), check('email').isLength({
@@ -21,7 +22,13 @@ router.post('/', [check('name').isLength({
   var errors = validationResult(req);
 
   if (errors.isEmpty()) {
-    res.send('Thank You for Registering!');
+    var registration = new Registration(req.body);
+    registration.save().then(function () {
+      res.send('Thank you for your registration!');
+    })["catch"](function (err) {
+      console.log(err);
+      res.send('Sorry! Something went wrong.');
+    });
   } else {
     res.render('form', {
       title: 'Registration form',

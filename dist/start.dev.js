@@ -14,6 +14,8 @@ mongoose.connection.on('open', function () {
   console.log("Connection error: ".concat(err.message));
 });
 
+require('./models/Registration');
+
 var app = require('./app');
 
 var server = app.listen(3000, function () {
