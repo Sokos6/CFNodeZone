@@ -8,6 +8,13 @@ var _require = require('express-validator'),
     check = _require.check,
     validationResult = _require.validationResult;
 
+var path = require('path');
+
+var auth = require('http-auth');
+
+var basic = auth.basic({
+  file: path.join(__dirname, '../users.htpasswd')
+});
 router.get('/', function (req, res) {
   res.render('form', {
     title: 'Registration Form'
@@ -42,7 +49,7 @@ router.post('/', [check('name').isLength({
     title: 'Registration Form'
   });
 });
-router.get('/registrations', function (req, res) {
+router.get('/registrations', basic.check(function (req, res) {
   Registration.find().then(function (registrations) {
     res.render('index', {
       title: 'Listing registrations',
@@ -51,5 +58,5 @@ router.get('/registrations', function (req, res) {
   })["catch"](function () {
     res.send('Sorry! Something went wrong.');
   });
-});
+}));
 module.exports = router;

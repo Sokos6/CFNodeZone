@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+const path = require('path');
+const auth = require('http-auth');
+
+const basic = auth.basic({
+  file: path.join(__dirname, '../users.htpasswd'),
+});
 
 router.get('/', (req, res) => {
   res.render('form', { title: 'Registration Form' });
@@ -39,12 +45,12 @@ router.post(
   }
 );
 
-router.get('/registrations', (req, res) => {
+router.get('/registrations', basic.check((req, res) => {
   Registration.find()
     .then((registrations) => {
       res.render('index', { title: 'Listing registrations', registrations });
     })
     .catch(() => { res.send('Sorry! Something went wrong.'); });
-});
+}));
 
 module.exports = router;
