@@ -42,4 +42,14 @@ router.post('/', [check('name').isLength({
     title: 'Registration Form'
   });
 });
+router.get('/registrations', function (req, res) {
+  Registration.find().then(function (registrations) {
+    res.render('index', {
+      title: 'Listing registrations',
+      registrations: registrations
+    });
+  })["catch"](function () {
+    res.send('Sorry! Something went wrong.');
+  });
+});
 module.exports = router;
