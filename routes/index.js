@@ -15,6 +15,17 @@ router.post(
     check('email').isLength({ min: 1 }).withMessage('Please enter an email'),
   ],
   (req, res) => {
+    const errors = validationResult(req);
+
+    if (errors.isEmpty()) {
+      res.send('Thank You for Registering!');
+    } else {
+      res.render('form', {
+        title: 'Registration form',
+        errors: errors.array(),
+        data: req.body,
+      });
+    }
     console.log(req.body);
     res.render('form', { title: 'Registration Form' });
   }
